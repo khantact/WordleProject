@@ -50,6 +50,7 @@ public class WordleLogic{
     private static String secret;
     private static char[] input = new char[5];
     private static String[] wordList = new String[5757];
+    private static String permsecret;
   //***************************************************
 
   
@@ -90,6 +91,7 @@ public class WordleLogic{
     }
     //secret = wordList[randomnum];
     secret = "BANAL";
+    permsecret = "BANAL";
     return secret; //placeholder: return dummy
   }
  
@@ -128,6 +130,7 @@ public class WordleLogic{
   //This function gets called everytime the player inputs 'Enter'
   //pressing the physical or virtual keyboard.  
   public static void checkLetters() {
+    char[] tempinpt = input.clone();
   	if (DEBUG_MODE) {
   		System.out.println("in checkLetters()");
   	}
@@ -141,43 +144,52 @@ public class WordleLogic{
       // For testing
       // System.out.println(Arrays.toString(input));
       // System.out.println(Arrays.toString(answer));
+      for (int k = 0; k < 5; k++){
+        WordleView.setCellColor(row, k, WRONG_COLOR);
+        updateKb(input[k],2);
+      }
       for (int i = 0; i < 5; i++){
         if (input[i] == answer[i]){
           WordleView.setCellColor(row, i, CORRECT_COLOR);
+          System.out.println("set "+input[i]+" to green");
+          updateKb(input[i],0);
+          tempinpt[i] = '\0'; 
+
           //System.out.println(input[i]);
           //System.out.println(secret);
-          dupeCheck(input[i], i);
-          System.out.println(secret);
-          updateKb(input[i],0);
+          
+          
           counter +=1;
           if (counter == 5){
             WordleView.gameOver(true);
           }
+          dupeCheck(input[i], i);
+          System.out.println(secret);
         }
-        if (input[i] != answer[i]){
+      }
+      for (int j = 0; j < tempinpt.length-1; j++){
           //converting to string to use indexOf()
-          if (secret.indexOf(Character.toString(input[i])) != -1){
+          if (secret.indexOf(Character.toString(tempinpt[j])) != -1){
             //System.out.println(i);
-            WordleView.setCellColor(row, i, WRONG_PLACE_COLOR);
-            updateKb(input[i], 1);
+            
+            WordleView.setCellColor(row, j, WRONG_PLACE_COLOR);
+            updateKb(tempinpt[j], 1);
+            dupeCheck(tempinpt[j], j);
           }
-          else{
-            WordleView.setCellColor(row, i, WRONG_COLOR);
-            updateKb(input[i],2);
-          }
-        }
+      }
+
       }
       if (row == 5)
         WordleView.gameOver(false);
       row +=1;
       col = 0;
-
-    }
+      secret = permsecret;
+      tempinpt = input;
   }
+  
   
   public static void updateKb(char key, int color){
     if (color == 0){ //in the case that letter is correct/green
-      System.out.println("test");
       WordleView.setKeyboardColor(key, CORRECT_COLOR);
     }
     if (color == 1 && WordleView.getKeyboardColor(key) != CORRECT_COLOR){ //If letter is yellow
@@ -191,6 +203,11 @@ public class WordleLogic{
     if (key == secret.charAt(i)){
       char[] temp = secret.toCharArray();
       temp[i] = ' ';
+      secret = String.valueOf(temp);
+    }
+    else {
+      char[] temp = secret.toCharArray();
+      temp[secret.indexOf(String.valueOf(key))] = ' ';
       secret = String.valueOf(temp);
     }
 
