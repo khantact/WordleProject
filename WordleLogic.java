@@ -144,10 +144,12 @@ public class WordleLogic{
       for (int i = 0; i < 5; i++){
         if (input[i] == answer[i]){
           WordleView.setCellColor(row, i, CORRECT_COLOR);
-          System.out.println(input[i]);
+          //System.out.println(input[i]);
+          //System.out.println(secret);
+          dupeCheck(input[i], i);
+          System.out.println(secret);
           updateKb(input[i],0);
           counter +=1;
-          
           if (counter == 5){
             WordleView.gameOver(true);
           }
@@ -185,7 +187,14 @@ public class WordleLogic{
       WordleView.setKeyboardColor(key, WRONG_COLOR);
     }
   }
-  
+  public static void dupeCheck(char key, int i){
+    if (key == secret.charAt(i)){
+      char[] temp = secret.toCharArray();
+      temp[i] = ' ';
+      secret = String.valueOf(temp);
+    }
+
+  }
   
   //This function gets called everytime the player types a valid letter
   //on the keyboard or clicks one of the letter keys on the 
