@@ -95,7 +95,6 @@ public class WordleLogic {
     }
     if (col > 0) {
       WordleView.setCellLetter(row, col - 1, EMPTY_CHAR);
-      System.out.println(col);
       input[col - 1] = EMPTY_CHAR;
       col--;
     }
@@ -125,25 +124,24 @@ public class WordleLogic {
     char[] answer = secret.toCharArray();
     int counter = 0;
 
-    if (col < 5 || isWord(inptStr) == false)
+    if (col < 5 || isWord(inptStr) == false) {
       WordleView.wiggleRow(row);
+    }
     if (isWord(inptStr)) {
       for (int k = 0; k < 5; k++) { // Sets everything to default wrong
         WordleView.setCellColor(row, k, WRONG_COLOR);
         updateKb(input[k], 2);
       }
-      for (int i = 0; i < 5; i++) { // checks for correct word
+      for (int i = 0; i < 5; i++) { // checks for correct word and overrides default
         if (input[i] == answer[i]) {
           WordleView.setCellColor(row, i, CORRECT_COLOR);
           updateKb(input[i], 0);
-          tempinpt[i] = '\0';
+          tempinpt[i] = '\0'; // deletes letter to fix duplicates
           counter++;
-          System.out.println(counter);
           if (counter == 5) {
             WordleView.gameOver(true);
           }
           dupeCheck(input[i], i); // deletes characters out of secret to fix duplicates
-          System.out.println(secret);
         }
       }
       for (int j = 0; j < tempinpt.length; j++) {
