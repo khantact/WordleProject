@@ -118,11 +118,13 @@ public class WordleLogic {
     if (DEBUG_MODE) {
       System.out.println("in checkLetters()");
     }
+    // Variables
     String scbase = secret;
     char[] tempinpt = input.clone();
     String inptStr = new String(input);
     char[] answer = secret.toCharArray();
     int counter = 0;
+
     if (col < 5 || isWord(inptStr) == false)
       WordleView.wiggleRow(row);
     if (isWord(inptStr)) {
@@ -130,7 +132,7 @@ public class WordleLogic {
         WordleView.setCellColor(row, k, WRONG_COLOR);
         updateKb(input[k], 2);
       }
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < 5; i++) { // checks for correct word
         if (input[i] == answer[i]) {
           WordleView.setCellColor(row, i, CORRECT_COLOR);
           updateKb(input[i], 0);
@@ -140,7 +142,7 @@ public class WordleLogic {
           if (counter == 5) {
             WordleView.gameOver(true);
           }
-          dupeCheck(input[i], i);
+          dupeCheck(input[i], i); // deletes characters out of secret to fix duplicates
           System.out.println(secret);
         }
       }
